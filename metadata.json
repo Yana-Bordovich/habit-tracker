@@ -1,0 +1,5 @@
+{
+  "name": "Habit Tracker with Gamification",
+  "description": "A personal habit tracker that uses gamification elements like XP, levels, and achievements to keep you motivated. All your data is stored locally in your browser.",
+  "requestFramePermissions": []
+}

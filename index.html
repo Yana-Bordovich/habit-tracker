@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="icon" type="image/svg+xml" href="/vite.svg" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Habit Tracker with Gamification</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+      tailwind.config = {
+        theme: {
+          extend: {
+            colors: {
+              'brand-primary': 'var(--brand-primary, #4F46E5)',
+              'brand-secondary': 'var(--brand-secondary, #7C3AED)',
+              'brand-accent': 'var(--brand-accent, #EC4899)',
+              'brand-light': '#F5F3FF',
+              'brand-dark': '#111827',
+              'brand-text': '#E5E7EB',
+            },
+            animation: {
+              'fade-in': 'fadeIn 0.5s ease-in-out',
+              'level-up': 'levelUp 1s ease-in-out',
+            },
+            keyframes: {
+              fadeIn: {
+                '0%': { opacity: '0', transform: 'translateY(-10px)' },
+                '100%': { opacity: '1', transform: 'translateY(0)' },
+              },
+              levelUp: {
+                '0%': { transform: 'scale(1)', color: '#FBBF24' },
+                '50%': { transform: 'scale(1.25)', color: '#EC4899' },
+                '100%': { transform: 'scale(1)', color: '#FBBF24' },
+              }
+            }
+          }
+        }
+      }
+    </script>
+  <style>
+    /* Default Dark Theme */
+    body {
+      --brand-primary: #4F46E5;
+      --brand-secondary: #7C3AED;
+      --brand-accent: #EC4899;
+    }
+    body.theme-dark {
+      background-color: #111827;
+      color: #E5E7EB;
+    }
+    .theme-dark .themed-bg-surface { background-color: rgba(31, 41, 55, 0.5); }
+    .theme-dark .themed-bg-surface-modal { background-color: #1f2937; }
+    .theme-dark .themed-bg-surface-secondary { background-color: rgba(55, 65, 81, 0.5); }
+    .theme-dark .themed-text-primary { color: #F9FAFB; }
+    .theme-dark .themed-text-secondary { color: #9CA3AF; }
+    .theme-dark .themed-border { border-color: #374151; }
+    .theme-dark .themed-input-bg { background-color: #374151; border-color: #4B5563; }
+
+    /* Light Theme */
+    body.theme-light {
+      background-color: #F3F4F6;
+      color: #1F2937;
+    }
+    .theme-light .themed-bg-surface { background-color: #FFFFFF; }
+    .theme-light .themed-bg-surface-modal { background-color: #FFFFFF; }
+    .theme-light .themed-bg-surface-secondary { background-color: #F9FAFB; }
+    .theme-light .themed-text-primary { color: #111827; }
+    .theme-light .themed-text-secondary { color: #6B7280; }
+    .theme-light .themed-border { border-color: #E5E7EB; }
+    .theme-light .themed-input-bg { background-color: #F9FAFB; border-color: #D1D5DB; }
+    .theme-light .backdrop-blur-sm { --tw-backdrop-blur: none; backdrop-filter: none; }
+    .theme-light .bg-gray-800\/50 { background-color: #FFFFFF; }
+
+
+    /* Blue Theme */
+    body.theme-blue {
+      --brand-primary: #3b82f6;
+      --brand-secondary: #60a5fa;
+      --brand-accent: #2563eb;
+      background-color: #0d1a2e;
+      color: #c4d3e9;
+    }
+    .theme-blue .themed-bg-surface { background-color: rgba(19, 39, 68, 0.7); }
+    .theme-blue .themed-bg-surface-modal { background-color: #132742; }
+    .theme-blue .themed-bg-surface-secondary { background-color: rgba(29, 53, 91, 0.5); }
+    .theme-blue .themed-text-primary { color: #E0EFFF; }
+    .theme-blue .themed-text-secondary { color: #8a9fc1; }
+    .theme-blue .themed-border { border-color: #2a4c7c; }
+    .theme-blue .themed-input-bg { background-color: #1e3a61; border-color: #2a4c7c; }
+
+    /* Custom Theme */
+    body.theme-custom {
+      background-color: var(--custom-bg, #111827);
+      color: var(--custom-text-primary, #E5E7EB);
+    }
+    .theme-custom .themed-bg-surface { background-color: var(--custom-surface, rgba(31, 41, 55, 0.5)); }
+    .theme-custom .themed-bg-surface-modal { background-color: var(--custom-surface-modal, #1f2937); }
+    .theme-custom .themed-bg-surface-secondary { background-color: var(--custom-surface-secondary, rgba(55, 65, 81, 0.5)); }
+    .theme-custom .themed-text-primary { color: var(--custom-text-primary, #F9FAFB); }
+    .theme-custom .themed-text-secondary { color: var(--custom-text-secondary, #9CA3AF); }
+    .theme-custom .themed-border { border-color: var(--custom-border, #374151); }
+    .theme-custom .themed-input-bg { background-color: var(--custom-surface-modal, #374151); border-color: var(--custom-border, #4B5563); }
+    .theme-custom .text-brand-primary { color: var(--brand-primary) !important; }
+    .theme-custom .border-brand-primary { border-color: var(--brand-primary) !important; }
+    .theme-custom .bg-brand-primary { background-color: var(--brand-primary) !important; }
+    .theme-custom .bg-brand-secondary { background-color: var(--brand-secondary) !important; }
+    .theme-custom .bg-brand-accent { background-color: var(--brand-accent) !important; }
+    .theme-custom .bg-brand-primary\/20 { background-color: hsla(var(--brand-primary-hsl), 0.2) !important; }
+
+  </style>
+
+</head>
+  <body>
+    <div id="root"></div>
+    <script type="module" src="/src/index.tsx"></script>
+  </body>
+</html>
