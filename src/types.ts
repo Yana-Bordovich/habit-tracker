@@ -4,6 +4,17 @@ export type Theme = 'dark' | 'light' | 'blue' | 'custom';
 
 export type Tab = 'habits' | 'social' | 'profile' | 'admin'| 'communities';
 
+
+// Добавьте интерфейс для сообществ
+export interface Community {
+  id: number;
+  name: string;
+  description: string;
+  category: string;
+  members_count: number;
+  habits_count: number;
+  joined_at?: string;
+}
 export interface Habit {
   id: string;
   name: string;

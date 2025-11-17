@@ -4,7 +4,7 @@ import { HomeIcon } from './icons/HomeIcon';
 import { UsersIcon } from './icons/UsersIcon';
 import { SettingsIcon } from './icons/SettingsIcon';
 import { ShieldIcon } from './icons/ShieldIcon';
-import { CommunityIcon } from './icons/CommunityIcon'; // Добавляем иконку для сообществ
+import { CommunityIcon } from './icons/CommunityIcon';
 
 interface NavProps {
   activeTab: Tab;
@@ -15,7 +15,7 @@ interface NavProps {
 const Nav: React.FC<NavProps> = ({ activeTab, setActiveTab, isAdmin }) => {
   const baseNavItems = [
     { id: 'habits', label: 'Привычки', icon: <HomeIcon className="w-5 h-5" /> },
-    { id: 'communities', label: 'Сообщества', icon: <CommunityIcon className="w-5 h-5" /> }, // Добавляем вкладку сообществ
+    { id: 'communities', label: 'Сообщества', icon: <CommunityIcon className="w-5 h-5" /> },
     { id: 'social', label: 'Сообщество', icon: <UsersIcon className="w-5 h-5" /> },
     { id: 'profile', label: 'Профиль', icon: <SettingsIcon className="w-5 h-5" /> },
   ];
