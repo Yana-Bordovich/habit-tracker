@@ -1,5 +1,5 @@
 import React from 'react';
-import type { Habit } from '../types';
+import type { Habit } from './types';
 import HabitItem from './HabitItem';
 
 interface HabitListProps {

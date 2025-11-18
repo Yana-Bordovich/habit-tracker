@@ -1,5 +1,5 @@
 import React, { useState, useCallback, useMemo, useEffect, useRef } from 'react';
-import type { AppState, HabitIcon, Theme, Tab, User } from './types';
+import type { AppState, HabitIcon, Theme, Tab, User } from ./types';
 import { XP_PER_HABIT, LEVEL_THRESHOLDS, INITIAL_ACHIEVEMENTS } from './constants';
 import * as api from './api';
 import Header from './components/Header';
@@ -12,7 +12,7 @@ import SocialPanel from './components/SocialPanel';
 import LoginScreen from './components/LoginScreen';
 import RegistrationScreen from './components/RegistrationScreen';
 import AdminPanel from './components/AdminPanel';
-import Communities from './components/Communities';
+import Communities from './components/Communities'; // default import
 import { adjustHexColor, hexToHsl, hslToRgb, rgbToHex } from './utils/color';
 
 // Helper to get date string (YYYY-MM-DD)
@@ -288,7 +288,7 @@ const App: React.FC = () => {
       case 'social':
         return <SocialPanel />;
       case 'communities':
-        return <Communities currentUser={currentUser} />; // Передаем currentUser в компонент
+        return <Communities />; // Передаем currentUser в компонент
       case 'profile':
         return <ProfilePanel 
                   appState={state}

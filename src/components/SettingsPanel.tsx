@@ -1,5 +1,5 @@
 import React, { useRef } from 'react';
-import type { AppState, Theme, User } from '../types';
+import type { AppState, Theme, User } from './types';
 import ColorPicker from './ColorPicker';
 
 interface ProfilePanelProps {

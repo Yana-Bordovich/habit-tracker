@@ -1,5 +1,5 @@
 import React from 'react';
-import type { Habit } from '../types';
+import type { Habit } from './types';
 import { BookOpenIcon, DumbbellIcon, WaterDropIcon, CodeIcon, MeditateIcon, RunIcon } from './icons/HabitIcons';
 import { FlameIcon } from './icons/FlameIcon';
 import { CheckIcon } from './icons/CheckIcon';

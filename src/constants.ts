@@ -1,4 +1,4 @@
-import type { Achievement } from './types';
+import type { Achievement } from ./types';
 
 export const XP_PER_HABIT = 15;
 export const LEVEL_THRESHOLDS = [0, 100, 250, 500, 1000, 1750, 2500, 5000, 10000];

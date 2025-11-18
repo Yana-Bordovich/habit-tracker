@@ -1,8 +1,34 @@
-import type { User, AppState } from './types';
+import type { User, AppState } from ./types';
 import { INITIAL_ACHIEVEMENTS } from './constants';
 
 const API_URL = 'http://localhost:3001';
 
+// Временно определите недостающие типы
+interface ApiResponse<T = any> {
+  data: T;
+  message?: string;
+  success: boolean;
+}
+
+interface AuthCredentials {
+  username: string;
+  password: string;
+}
+
+interface CreateCommunityData {
+  name: string;
+  description: string;
+  category: string;
+}
+
+interface Community {
+  id: number;
+  name: string;
+  description: string;
+  category: string;
+  members_count: number;
+  created_at: string;
+}
 const handleResponse = async (response: Response) => {
   if (!response.ok) {
     const errorText = await response.text();
@@ -47,6 +73,14 @@ const getToken = (): string => {
     console.error('Token error:', error);
     throw new Error('User not authenticated. Please log in again.');
   }
+};
+
+// Helper function to get auth headers
+const getAuthHeaders = (): HeadersInit => {
+  return {
+    'Content-Type': 'application/json',
+    'Authorization': `Bearer ${getToken()}`
+  };
 };
 
 // Auth functions
@@ -98,7 +132,7 @@ export const saveState = async (userId: string, state: AppState): Promise<{ mess
 };
 
 // Communities functions
-export const getCommunities = async (): Promise<any[]> => {
+export const getCommunities = async (): Promise<Community[]> => {
   const userId = getCurrentUserId();
   console.log('Fetching communities with user ID:', userId);
   
@@ -111,7 +145,7 @@ export const getCommunities = async (): Promise<any[]> => {
   return handleResponse(response);
 };
 
-export const createCommunity = async (community: { name: string; description: string; category: string }): Promise<any> => {
+export const createCommunity = async (community: CreateCommunityData): Promise<Community> => {
   const userId = getCurrentUserId();
   const response = await fetch(`${API_URL}/api/communities`, {
     method: 'POST',
@@ -125,7 +159,7 @@ export const createCommunity = async (community: { name: string; description: st
   return handleResponse(response);
 };
 
-export const joinCommunity = async (communityId: number): Promise<any> => {
+export const joinCommunity = async (communityId: number): Promise<ApiResponse<void>> => {
   const userId = getCurrentUserId();
   const response = await fetch(`${API_URL}/api/communities/${communityId}/join`, {
     method: 'POST',
@@ -137,7 +171,7 @@ export const joinCommunity = async (communityId: number): Promise<any> => {
   return handleResponse(response);
 };
 
-export const leaveCommunity = async (communityId: number): Promise<any> => {
+export const leaveCommunity = async (communityId: number): Promise<ApiResponse<void>> => {
   const userId = getCurrentUserId();
   const response = await fetch(`${API_URL}/api/communities/${communityId}/leave`, {
     method: 'POST',
@@ -149,14 +183,10 @@ export const leaveCommunity = async (communityId: number): Promise<any> => {
   return handleResponse(response);
 };
 
-export const deleteCommunity = async (communityId: number): Promise<any> => {
-  const userId = getCurrentUserId();
+export const deleteCommunity = async (communityId: number): Promise<ApiResponse<void>> => {
   const response = await fetch(`${API_URL}/api/communities/${communityId}`, {
     method: 'DELETE',
-    headers: {
-      'Content-Type': 'application/json',
-      'Authorization': `Bearer ${getToken()}`
-    }
+    headers: getAuthHeaders()
   });
 
   if (!response.ok) {
@@ -177,7 +207,7 @@ export const getCommunityMembers = async (communityId: number): Promise<any[]> =
   return handleResponse(response);
 };
 
-export const getUserCommunities = async (): Promise<any[]> => {
+export const getUserCommunities = async (): Promise<Community[]> => {
   const userId = getCurrentUserId();
   const response = await fetch(`${API_URL}/api/user/communities`, {
     headers: {

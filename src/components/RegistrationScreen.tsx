@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { register } from '../api';
-import type { User } from '../types';
+import type { User } from './types';
 
 interface RegistrationScreenProps {
   onRegistrationSuccess: (user: User) => void;
