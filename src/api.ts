@@ -1,22 +1,52 @@
 import type { User, AppState } from './types';
 import { INITIAL_ACHIEVEMENTS } from './constants';
 
-const API_URL = 'http://localhost:3001'; // URL нашего бэкенд-сервера
+const API_URL = 'http://localhost:3001';
 
 const handleResponse = async (response: Response) => {
   if (!response.ok) {
-    const errorData = await response.json();
-    throw new Error(errorData.message || 'Произошла ошибка на сервере');
+    const errorText = await response.text();
+    console.error('API Error:', response.status, errorText);
+    throw new Error(`API Error: ${response.status} ${response.statusText}`);
   }
   return response.json();
 };
 
-// Helper function to get current user ID
+// Helper function to get current user ID with better error handling
 const getCurrentUserId = (): string => {
-  const currentUser = sessionStorage.getItem('currentUser');
-  if (!currentUser) throw new Error('User not authenticated');
-  const user = JSON.parse(currentUser);
-  return user.id;
+  try {
+    const currentUser = sessionStorage.getItem('currentUser');
+    if (!currentUser) {
+      throw new Error('No user found in sessionStorage');
+    }
+    const user = JSON.parse(currentUser);
+    if (!user.id) {
+      throw new Error('User ID not found');
+    }
+    console.log('Using user ID:', user.id);
+    return user.id;
+  } catch (error) {
+    console.error('Auth error:', error);
+    throw new Error('User not authenticated. Please log in again.');
+  }
+};
+
+// Helper function to get token from current user
+const getToken = (): string => {
+  try {
+    const currentUser = sessionStorage.getItem('currentUser');
+    if (!currentUser) {
+      throw new Error('No user found in sessionStorage');
+    }
+    const user = JSON.parse(currentUser);
+    if (!user.token) {
+      throw new Error('Token not found');
+    }
+    return user.token;
+  } catch (error) {
+    console.error('Token error:', error);
+    throw new Error('User not authenticated. Please log in again.');
+  }
 };
 
 // Auth functions
@@ -35,7 +65,11 @@ export const login = async (username: string, password: string): Promise<User> =
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({ username, password }),
   });
-  return handleResponse(response);
+  const user = await handleResponse(response);
+  // Сохраняем пользователя в sessionStorage
+  sessionStorage.setItem('currentUser', JSON.stringify(user));
+  console.log('User logged in and saved:', user);
+  return user;
 };
 
 // State management functions
@@ -44,7 +78,6 @@ export const getState = async (userId: string): Promise<AppState> => {
     headers: { 'Authorization': userId },
   });
   const data = await handleResponse(response);
-  // Обеспечиваем, что на клиенте всегда есть полный набор достижений
   const achievements = INITIAL_ACHIEVEMENTS.map(initialAch => {
     const savedAch = data.achievements?.find(a => a.id === initialAch.id);
     return savedAch ? { ...initialAch, unlocked: savedAch.unlocked } : initialAch;
@@ -64,42 +97,18 @@ export const saveState = async (userId: string, state: AppState): Promise<{ mess
   return handleResponse(response);
 };
 
-// Date settings functions
-export const getGlobalDateOverride = async (userId: string): Promise<{ date: string | null }> => {
-  const response = await fetch(`${API_URL}/api/settings/date`, {
-    headers: { 'Authorization': userId },
-  });
-  return handleResponse(response);
-};
-
-export const setGlobalDateOverride = async (userId: string, date: string | null): Promise<{ message: string }> => {
-  const response = await fetch(`${API_URL}/api/settings/date`, {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-      'Authorization': userId,
-    },
-    body: JSON.stringify({ date }),
-  });
-  return handleResponse(response);
-};
-
 // Communities functions
 export const getCommunities = async (): Promise<any[]> => {
   const userId = getCurrentUserId();
+  console.log('Fetching communities with user ID:', userId);
+  
   const response = await fetch(`${API_URL}/api/communities`, {
     headers: {
       'Authorization': userId
     }
   });
   
-  if (!response.ok) {
-    const errorText = await response.text();
-    console.error('Get communities error response:', errorText);
-    throw new Error(`Failed to fetch communities: ${response.status} ${response.statusText}`);
-  }
-  
-  return response.json();
+  return handleResponse(response);
 };
 
 export const createCommunity = async (community: { name: string; description: string; category: string }): Promise<any> => {
@@ -113,13 +122,7 @@ export const createCommunity = async (community: { name: string; description: st
     body: JSON.stringify(community)
   });
   
-  if (!response.ok) {
-    const errorText = await response.text();
-    console.error('Create community error response:', errorText);
-    throw new Error(`Failed to create community: ${response.status} ${response.statusText}`);
-  }
-  
-  return response.json();
+  return handleResponse(response);
 };
 
 export const joinCommunity = async (communityId: number): Promise<any> => {
@@ -131,13 +134,7 @@ export const joinCommunity = async (communityId: number): Promise<any> => {
     }
   });
   
-  if (!response.ok) {
-    const errorText = await response.text();
-    console.error('Join community error response:', errorText);
-    throw new Error(`Failed to join community: ${response.status} ${response.statusText}`);
-  }
-  
-  return response.json();
+  return handleResponse(response);
 };
 
 export const leaveCommunity = async (communityId: number): Promise<any> => {
@@ -149,13 +146,35 @@ export const leaveCommunity = async (communityId: number): Promise<any> => {
     }
   });
   
+  return handleResponse(response);
+};
+
+export const deleteCommunity = async (communityId: number): Promise<any> => {
+  const userId = getCurrentUserId();
+  const response = await fetch(`${API_URL}/api/communities/${communityId}`, {
+    method: 'DELETE',
+    headers: {
+      'Content-Type': 'application/json',
+      'Authorization': `Bearer ${getToken()}`
+    }
+  });
+
   if (!response.ok) {
-    const errorText = await response.text();
-    console.error('Leave community error response:', errorText);
-    throw new Error(`Failed to leave community: ${response.status} ${response.statusText}`);
+    throw new Error('Failed to delete community');
   }
-  
+
   return response.json();
+};
+
+export const getCommunityMembers = async (communityId: number): Promise<any[]> => {
+  const userId = getCurrentUserId();
+  const response = await fetch(`${API_URL}/api/communities/${communityId}/members`, {
+    headers: {
+      'Authorization': userId
+    }
+  });
+  
+  return handleResponse(response);
 };
 
 export const getUserCommunities = async (): Promise<any[]> => {
@@ -166,11 +185,5 @@ export const getUserCommunities = async (): Promise<any[]> => {
     }
   });
   
-  if (!response.ok) {
-    const errorText = await response.text();
-    console.error('Get user communities error response:', errorText);
-    throw new Error(`Failed to fetch user communities: ${response.status} ${response.statusText}`);
-  }
-  
-  return response.json();
+  return handleResponse(response);
 };
