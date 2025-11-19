@@ -1,18 +1,5 @@
 import { apiClient } from './apiClient';
-
-// Temporary interfaces
-interface User {
-  id: string;
-  username: string;
-  token: string;
-  created_at?: string;
-}
-
-interface AuthCredentials {
-  username: string;
-  password: string;
-  email?: string;
-}
+import type { User, AuthCredentials, ApiResponse } from '../../types';
 
 export const authService = {
   async register(credentials: AuthCredentials): Promise<User> {

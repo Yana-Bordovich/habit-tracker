@@ -1,6 +1,6 @@
 import { useState, useCallback } from 'react';
 import { authService } from '../services/api/authService';
-import type { User } from './types';
+import type { User } from '../types';
 
 // Temporary local type
 interface AuthCredentials {

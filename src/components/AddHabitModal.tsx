@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import type { HabitIcon } from './types';
+import type { HabitIcon } from '../types';
 import { BookOpenIcon, DumbbellIcon, WaterDropIcon, CodeIcon, MeditateIcon, RunIcon } from './icons/HabitIcons';
 
 interface AddHabitModalProps {

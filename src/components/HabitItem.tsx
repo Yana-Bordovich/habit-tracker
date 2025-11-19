@@ -1,5 +1,5 @@
 import React from 'react';
-import type { Habit } from './types';
+import type { Habit } from '../types';
 import { BookOpenIcon, DumbbellIcon, WaterDropIcon, CodeIcon, MeditateIcon, RunIcon } from './icons/HabitIcons';
 import { FlameIcon } from './icons/FlameIcon';
 import { CheckIcon } from './icons/CheckIcon';
@@ -27,7 +27,7 @@ const HabitItem: React.FC<HabitItemProps> = ({ habit, onComplete, onDelete, isCo
     <div className={`p-4 rounded-xl shadow-md flex items-center justify-between transition-all duration-300 border-l-4 themed-bg-surface ${isCompletedToday ? 'border-green-500' : 'border-brand-primary'}`}>
       <div className="flex items-center space-x-4">
         <div className={`p-3 rounded-lg ${isCompletedToday ? 'bg-green-500/20 text-green-400' : 'bg-brand-primary/20 text-brand-primary'}`}>
-          {iconMap[habit.icon]}
+          {/* iconMap[habit.icon] */}
         </div>
         <div>
           <p className="font-semibold text-lg themed-text-primary">{habit.name}</p>

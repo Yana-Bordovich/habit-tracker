@@ -1,5 +1,5 @@
 import React, { useState, useCallback, useMemo, useEffect, useRef } from 'react';
-import type { AppState, HabitIcon, Theme, Tab, User } from ./types';
+import type { AppState, HabitIcon, Theme, Tab, User } from 'C:/Users/HP/Desktop/programmma/src/types';
 import { XP_PER_HABIT, LEVEL_THRESHOLDS, INITIAL_ACHIEVEMENTS } from './constants';
 import * as api from './api';
 import Header from './components/Header';
@@ -35,14 +35,22 @@ const App: React.FC = () => {
   const [globalDateOverride, setGlobalDateOverride] = useState<string | null>(null);
 
   const [state, setState] = useState<AppState>({
-    habits: [],
-    xp: 0,
-    level: 1,
-    achievements: INITIAL_ACHIEVEMENTS,
-    theme: 'dark',
-    primaryColor: '#4F46E5',
-    avatarUrl: undefined
-  });
+  user: {
+    id: '',
+    username: '',
+    token: '',
+    created_at: ''
+  },
+  habits: [],
+  communities: [],
+  achievements: INITIAL_ACHIEVEMENTS,
+  lastUpdated: new Date().toISOString(),
+  xp: 0,
+  level: 1,
+  theme: 'dark',
+  primaryColor: '#4F46E5',
+  avatarUrl: undefined
+});
   
   const [isLoading, setIsLoading] = useState(true);
 
@@ -288,7 +296,7 @@ const App: React.FC = () => {
       case 'social':
         return <SocialPanel />;
       case 'communities':
-        return <Communities />; // Передаем currentUser в компонент
+        return <Communities />; 
       case 'profile':
         return <ProfilePanel 
                   appState={state}

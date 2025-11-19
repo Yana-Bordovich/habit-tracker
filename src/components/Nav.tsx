@@ -1,5 +1,5 @@
 import React from 'react';
-import type { Tab } from './types';
+import type { Tab } from '../types';
 import { HomeIcon } from './icons/HomeIcon';
 import { UsersIcon } from './icons/UsersIcon';
 import { SettingsIcon } from './icons/SettingsIcon';

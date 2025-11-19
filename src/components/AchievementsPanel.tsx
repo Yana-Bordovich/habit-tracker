@@ -1,5 +1,5 @@
 import React from 'react';
-import type { Achievement } from './types';
+import type { Achievement } from '../types';
 import { TrophyIcon } from './icons/TrophyIcon';
 import { LockIcon } from './icons/LockIcon';
 

@@ -1,5 +1,5 @@
 import { apiClient } from './apiClient';
-import type { Community, CreateCommunityData, ApiResponse, CommunityMember } from '.././types';
+import type { Community, CreateCommunityData, ApiResponse, CommunityMember } from '../../types';
 
 export const communityService = {
   async getCommunities(): Promise<Community[]> {

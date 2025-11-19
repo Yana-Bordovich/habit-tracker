@@ -1,4 +1,4 @@
-import type { User, AppState } from ./types';
+import type { User, AppState } from './types';
 import { INITIAL_ACHIEVEMENTS } from './constants';
 
 const API_URL = 'http://localhost:3001';

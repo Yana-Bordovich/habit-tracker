@@ -1,9 +1,8 @@
 import { useState, useCallback, useEffect } from 'react';
 import { communityService } from '../services/api/communityService';
-import type { Community, CreateCommunityData } from './types';
 
 export const useCommunities = () => {
-  const [communities, setCommunities] = useState<Community[]>([]);
+  const [communities, setCommunities] = useState<any[]>([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
@@ -21,7 +20,7 @@ export const useCommunities = () => {
     }
   }, []);
 
-  const createCommunity = useCallback(async (communityData: CreateCommunityData): Promise<Community> => {
+  const createCommunity = useCallback(async (communityData: any): Promise<any> => {
     setError(null);
     
     try {

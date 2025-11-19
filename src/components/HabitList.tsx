@@ -1,5 +1,5 @@
 import React from 'react';
-import type { Habit } from './types';
+import type { Habit } from '../types';
 import HabitItem from './HabitItem';
 
 interface HabitListProps {
@@ -28,7 +28,7 @@ const HabitList: React.FC<HabitListProps> = ({ habits, onComplete, onDelete, tod
           habit={habit} 
           onComplete={onComplete} 
           onDelete={onDelete} 
-          isCompletedToday={habit.lastCompleted === today}
+          isCompletedToday={habit.completed_today || false}
         />
       ))}
     </div>
