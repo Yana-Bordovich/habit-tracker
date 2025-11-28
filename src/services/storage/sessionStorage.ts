@@ -1,4 +1,4 @@
-import type { User } from '../../types';
+import type { User } from 'C:/Users/HP/Desktop/programmma/src/types';
 
 export const sessionStorageService = {
   setCurrentUser(user: User): void {

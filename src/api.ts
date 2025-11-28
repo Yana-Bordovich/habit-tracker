@@ -3,7 +3,7 @@ import { INITIAL_ACHIEVEMENTS } from './constants';
 
 const API_URL = 'http://localhost:3001';
 
-// Временно определите недостающие типы
+
 interface ApiResponse<T = any> {
   data: T;
   message?: string;
@@ -100,7 +100,7 @@ export const login = async (username: string, password: string): Promise<User> =
     body: JSON.stringify({ username, password }),
   });
   const user = await handleResponse(response);
-  // Сохраняем пользователя в sessionStorage
+
   sessionStorage.setItem('currentUser', JSON.stringify(user));
   console.log('User logged in and saved:', user);
   return user;
