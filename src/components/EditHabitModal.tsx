@@ -1,28 +1,25 @@
-// src/components/AddHabitModal.tsx
 import { useState } from 'react';
 import { X } from 'lucide-react';
-import { useHabitStore } from '../store/habitStore';
+import { useHabitStore, Habit } from '../store/habitStore';
 
 const colors = ['bg-red-500', 'bg-orange-500', 'bg-yellow-500', 'bg-green-500', 'bg-blue-500', 'bg-purple-500', 'bg-pink-500'];
 
-interface AddHabitModalProps {
+interface Props {
   isOpen: boolean;
   onClose: () => void;
+  habit: Habit;
 }
 
-export default function AddHabitModal({ isOpen, onClose }: AddHabitModalProps) {
-  const { addHabit } = useHabitStore();
-  const [name, setName] = useState('');
-  const [description, setDescription] = useState('');
-  const [color, setColor] = useState(colors[5]); // по умолчанию фиолетовый
+export default function EditHabitModal({ isOpen, onClose, habit }: Props) {
+  const { editHabit, deleteHabit } = useHabitStore();
+  const [name, setName] = useState(habit.name);
+  const [description, setDescription] = useState(habit.description);
+  const [color, setColor] = useState(habit.color);
 
   if (!isOpen) return null;
 
-  const handleSubmit = () => {
-    if (!name.trim()) return;
-    addHabit({ name: name.trim(), description: description.trim(), color });
-    setName('');
-    setDescription('');
+  const handleSave = () => {
+    editHabit(habit.id, { name, description, color });
     onClose();
   };
 
@@ -30,7 +27,7 @@ export default function AddHabitModal({ isOpen, onClose }: AddHabitModalProps) {
     <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
       <div className="bg-white rounded-2xl max-w-md w-full p-6">
         <div className="flex justify-between items-center mb-6">
-          <h2 className="text-2xl font-bold">Новая привычка</h2>
+          <h2 className="text-2xl font-bold">Редактировать привычку</h2>
           <button onClick={onClose} className="p-2 hover:bg-gray-100 rounded-lg">
             <X className="w-6 h-6" />
           </button>
@@ -41,8 +38,7 @@ export default function AddHabitModal({ isOpen, onClose }: AddHabitModalProps) {
           value={name}
           onChange={(e) => setName(e.target.value)}
           className="w-full px-4 py-3 border border-gray-300 rounded-xl mb-4 focus:outline-none focus:ring-2 focus:ring-purple-500"
-          placeholder="Например: Пить воду утром"
-          autoFocus
+          placeholder="Название привычки"
         />
 
         <input
@@ -66,13 +62,23 @@ export default function AddHabitModal({ isOpen, onClose }: AddHabitModalProps) {
           </div>
         </div>
 
-        <button
-          onClick={handleSubmit}
-          disabled={!name.trim()}
-          className="w-full bg-purple-600 text-white py-4 rounded-xl font-bold hover:bg-purple-700 transition disabled:opacity-50 disabled:cursor-not-allowed"
-        >
-          Создать привычку
-        </button>
+        <div className="flex gap-3">
+          <button
+            onClick={handleSave}
+            className="flex-1 bg-purple-600 text-white py-3 rounded-xl font-bold hover:bg-purple-700 transition"
+          >
+            Сохранить
+          </button>
+          <button
+            onClick={() => {
+              deleteHabit(habit.id);
+              onClose();
+            }}
+            className="px-6 py-3 bg-red-500 text-white rounded-xl font-bold hover:bg-red-600 transition"
+          >
+            Удалить
+          </button>
+        </div>
       </div>
     </div>
   );
