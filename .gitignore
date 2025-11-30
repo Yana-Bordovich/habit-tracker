@@ -31,4 +31,9 @@ pids
 
 # OS
 .DS_Store
-Thumbs.db
+Thumbs.dbnul
+server/database.db
+nul
+server/database.db
+nul
+server/database.db
