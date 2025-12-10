@@ -12,22 +12,17 @@ export interface Community {
   created_at: string;
   is_member?: boolean;
 
+
 }
-export interface Habit {
+export type Habit = {
   id: string;
   name: string;
   description: string;
-  frequency: 'daily' | 'weekly' | 'monthly';
-  goal: number;
-  completed: number;
-  streak: number;
-  category: string;
-  created_at: string;
-  updated_at: string;
-  completed_today?: boolean;
-  icon?: HabitIcon;
-  lastCompleted?: string;
-}
+  color: string;
+  completedDates: string[]; // ISO строки дат
+  createdAt: string;
+  isArchived: boolean;  // Добавлено для архива
+};
 
 export interface User {
   id: string;

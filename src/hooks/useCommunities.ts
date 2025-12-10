@@ -1,5 +1,12 @@
+// src/hooks/useCommunities.ts
 import { useState, useCallback, useEffect } from 'react';
-import { communityService } from '../services/api/communityService';
+import {
+  getCommunities,
+  createCommunity,
+  joinCommunity,
+  leaveCommunity,
+  deleteCommunity,
+} from '../services/api/communityService';
 
 export const useCommunities = () => {
   const [communities, setCommunities] = useState<any[]>([]);
@@ -9,67 +16,62 @@ export const useCommunities = () => {
   const fetchCommunities = useCallback(async () => {
     setLoading(true);
     setError(null);
-    
     try {
-      const data = await communityService.getCommunities();
+      const data = await getCommunities();
       setCommunities(data);
     } catch (err) {
-      setError(err instanceof Error ? err.message : 'Failed to fetch communities');
+      setError(err instanceof Error ? err.message : 'Не удалось загрузить сообщества');
     } finally {
       setLoading(false);
     }
   }, []);
 
-  const createCommunity = useCallback(async (communityData: any): Promise<any> => {
+  const handleCreate = useCallback(async (communityData: any) => {
     setError(null);
-    
     try {
-      const newCommunity = await communityService.createCommunity(communityData);
+      const newCommunity = await createCommunity(communityData);
       setCommunities(prev => [...prev, newCommunity]);
       return newCommunity;
     } catch (err) {
-      const errorMessage = err instanceof Error ? err.message : 'Failed to create community';
-      setError(errorMessage);
-      throw new Error(errorMessage);
+      const msg = err instanceof Error ? err.message : 'Не удалось создать сообщество';
+      setError(msg);
+      throw new Error(msg);
     }
   }, []);
 
-  const joinCommunity = useCallback(async (communityId: number): Promise<void> => {
+  const handleJoin = useCallback(async (communityId: number) => {
     setError(null);
-    
     try {
-      await communityService.joinCommunity(communityId);
+      await joinCommunity(communityId);
       await fetchCommunities();
     } catch (err) {
-      const errorMessage = err instanceof Error ? err.message : 'Failed to join community';
-      setError(errorMessage);
-      throw new Error(errorMessage);
+      const msg = err instanceof Error ? err.message : 'Не удалось присоединиться';
+      setError(msg);
+      throw new Error(msg);
     }
   }, [fetchCommunities]);
 
-  const leaveCommunity = useCallback(async (communityId: number): Promise<void> => {
+  const handleLeave = useCallback(async (communityId: number) => {
     setError(null);
-    
     try {
-      await communityService.leaveCommunity(communityId);
+      await leaveCommunity(communityId);
       await fetchCommunities();
     } catch (err) {
-      const errorMessage = err instanceof Error ? err.message : 'Failed to leave community';
-      setError(errorMessage);
-      throw new Error(errorMessage);
+      const msg = err instanceof Error ? err.message : 'Не удалось выйти';
+      setError(msg);
+      throw new Error(msg);
     }
   }, [fetchCommunities]);
 
-  const deleteCommunity = useCallback(async (communityId: number): Promise<void> => {
+  const handleDelete = useCallback(async (communityId: number) => {
     setError(null);
-    
     try {
-      await communityService.deleteCommunity(communityId);
-      setCommunities(prev => prev.filter(community => community.id !== communityId));
+      await deleteCommunity(communityId);
+      setCommunities(prev => prev.filter(c => c.id !== communityId));
     } catch (err) {
-      const errorMessage = err instanceof Error ? err.message : 'Failed to delete community';
-      setError(errorMessage);
-      throw new Error(errorMessage);
+      const msg = err instanceof Error ? err.message : 'Не удалось удалить сообщество';
+      setError(msg);
+      throw new Error(msg);
     }
   }, []);
 
@@ -82,9 +84,9 @@ export const useCommunities = () => {
     loading,
     error,
     fetchCommunities,
-    createCommunity,
-    joinCommunity,
-    leaveCommunity,
-    deleteCommunity,
+    createCommunity: handleCreate,
+    joinCommunity: handleJoin,
+    leaveCommunity: handleLeave,
+    deleteCommunity: handleDelete,
   };
 };

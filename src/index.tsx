@@ -1,14 +1,16 @@
-
+// src/index.tsx
 import React from 'react';
 import ReactDOM from 'react-dom/client';
 import App from './App';
 
 const rootElement = document.getElementById('root');
 if (!rootElement) {
-  throw new Error("Could not find root element to mount to");
+  throw new Error('Root element not found');
 }
 
 const root = ReactDOM.createRoot(rootElement);
+
+// Строгий режим без ошибок типизации
 root.render(
   <React.StrictMode>
     <App />

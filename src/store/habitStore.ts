@@ -8,14 +8,15 @@ export type Habit = {
   color: string;
   completedDates: string[]; // ISO строки дат
   createdAt: string;
+  isArchived: boolean;  // Добавлено
 };
 
 type HabitStore = {
   habits: Habit[];
-  addHabit: (habit: Omit<Habit, 'id' | 'completedDates' | 'createdAt'>) => void;
+  addHabit: (habit: Omit<Habit, 'id' | 'completedDates' | 'createdAt' | 'isArchived'>) => void;
   toggleHabit: (id: string, date?: string) => void;
   editHabit: (id: string, updates: Partial<Habit>) => void;
-  deleteHabit: (id: string) => void;
+  archiveHabit: (id: string) => void;  // Изменено с deleteHabit
 };
 
 const today = new Date().toISOString().split('T')[0];
@@ -33,10 +34,12 @@ export const useHabitStore = create<HabitStore>()(
               id: Date.now().toString(),
               completedDates: [],
               createdAt: new Date().toISOString(),
+              isArchived: false,  // Добавлено
             },
           ],
         })),
-      toggleHabit: (id, date = today) =>
+      toggleHabit: (id, date = today) => {
+        if (new Date(date) > new Date()) return;
         set((state) => ({
           habits: state.habits.map((h) =>
             h.id === id
@@ -44,25 +47,25 @@ export const useHabitStore = create<HabitStore>()(
                   ...h,
                   completedDates: h.completedDates.includes(date)
                     ? h.completedDates.filter((d) => d !== date)
-                    : [...h.completedDates, date],
+                    : [...h.completedDates, date].sort(),
                 }
               : h
           ),
-        })),
+        }));
+      },
       editHabit: (id, updates) =>
         set((state) => ({
           habits: state.habits.map((h) => (h.id === id ? { ...h, ...updates } : h)),
         })),
-      deleteHabit: (id) =>
+      archiveHabit: (id) =>  // Изменено: архивируем вместо удаления
         set((state) => ({
-          habits: state.habits.filter((h) => h.id !== id),
+          habits: state.habits.map((h) => (h.id === id ? { ...h, isArchived: true } : h)),
         })),
     }),
     { name: 'habit-storage' }
   )
 );
 
-// Вспомогательная функция для расчёта текущего стриков
 export const getCurrentStreak = (completedDates: string[]): number => {
   if (completedDates.length === 0) return 0;
   const sorted = [...completedDates].sort().reverse();

@@ -11,6 +11,7 @@ interface ProfilePanelProps {
   onAvatarChange: (dataUrl: string) => void;
 }
 
+
 const ProfilePanel: React.FC<ProfilePanelProps> = ({ appState, onThemeChange, currentUser, onLogout, onPrimaryColorChange, onAvatarChange }) => {
   const { theme: currentTheme, primaryColor } = appState;
   const fileInputRef = useRef<HTMLInputElement>(null);

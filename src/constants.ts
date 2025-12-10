@@ -14,6 +14,7 @@ export const INITIAL_ACHIEVEMENTS: Achievement[] = [
     target: 1,
     // check: (state) => state.habits.some(h => h.streak > 0), // временно удалите
   },
+
   {
     id: 'STREAK_3',
     name: 'Начало положено',

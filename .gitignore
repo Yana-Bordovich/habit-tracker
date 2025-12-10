@@ -13,6 +13,7 @@ npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
 pnpm-debug.log*
+*.log  # Добавлено
 
 # Runtime data
 pids
@@ -30,7 +31,7 @@ pids
 *.swo
 
 # OS
-.DS_Store
+.DS_Store  # Добавлено для macOS
 Thumbs.dbnul
 server/database.db
 nul

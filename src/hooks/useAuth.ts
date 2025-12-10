@@ -1,70 +1,45 @@
-import { useState, useCallback } from 'react';
-import { authService } from '../services/api/authService';
-import type { User } from '../types';
-
-// Temporary local type
-interface AuthCredentials {
-  username: string;
-  password: string;
-  email?: string;
-}
+// src/hooks/useAuth.ts
+import { useState } from 'react';
+import { register, login } from '../services/api/authService'; // ← правильный импорт
 
 export const useAuth = () => {
-  const [user, setUser] = useState<User | null>(() => authService.getCurrentUser());
+  const [user, setUser] = useState<any>(null);
   const [loading, setLoading] = useState(false);
-  const [error, setError] = useState<string | null>(null);
+  const [error, setError] = useState('');
 
-  const login = useCallback(async (credentials: AuthCredentials): Promise<User> => {
+  const handleRegister = async (username: string, password: string) => {
     setLoading(true);
-    setError(null);
-    
+    setError('');
     try {
-      const userData = await authService.login(credentials);
-      setUser(userData);
-      return userData;
-    } catch (err) {
-      const errorMessage = err instanceof Error ? err.message : 'Login failed';
-      setError(errorMessage);
-      throw new Error(errorMessage);
+      const data = await register(username, password);
+      setUser(data);
+      return data;
+    } catch (err: any) {
+      setError(err.message);
+      throw err;
     } finally {
       setLoading(false);
     }
-  }, []);
-
-  const register = useCallback(async (credentials: AuthCredentials): Promise<User> => {
-    setLoading(true);
-    setError(null);
-    
-    try {
-      const userData = await authService.register(credentials);
-      setUser(userData);
-      return userData;
-    } catch (err) {
-      const errorMessage = err instanceof Error ? err.message : 'Registration failed';
-      setError(errorMessage);
-      throw new Error(errorMessage);
-    } finally {
-      setLoading(false);
-    }
-  }, []);
-
-  const logout = useCallback((): void => {
-    authService.logout();
-    setUser(null);
-    setError(null);
-  }, []);
-
-  const isAuthenticated = useCallback((): boolean => {
-    return user !== null;
-  }, [user]);
-
-  return {
-    user,
-    loading,
-    error,
-    login,
-    register,
-    logout,
-    isAuthenticated: isAuthenticated(),
   };
+
+  const handleLogin = async (username: string, password: string) => {
+    setLoading(true);
+    setError('');
+    try {
+      const data = await login(username, password);
+      setUser(data);
+      return data;
+    } catch (err: any) {
+      setError(err.message);
+      throw err;
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const logout = () => {
+    setUser(null);
+  };
+
+  return { user, loading, error, register: handleRegister, login: handleLogin, logout };
 };

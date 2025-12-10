@@ -13,6 +13,7 @@ export function hexToRgb(hex: string): RGB | null {
     : null;
 }
 
+
 export function rgbToHex({ r, g, b }: RGB): string {
   const toHex = (c: number) => `0${Math.round(c).toString(16)}`.slice(-2);
   return `#${toHex(r)}${toHex(g)}${toHex(b)}`.toLowerCase();

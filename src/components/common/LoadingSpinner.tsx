@@ -15,6 +15,7 @@ export const LoadingSpinner: React.FC<LoadingSpinnerProps> = ({
     large: 'h-12 w-12'
   };
 
+
   return (
     <div className={`flex justify-center items-center ${className}`}>
       <div 

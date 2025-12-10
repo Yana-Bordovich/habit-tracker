@@ -15,12 +15,18 @@ const RegistrationScreen: React.FC<RegistrationScreenProps> = ({ onRegistrationS
   const handleRegister = async (e: React.FormEvent) => {
     e.preventDefault();
     setError('');
+
+    if (username.length < 3 || password.length < 6) {  // Добавлена валидация
+      setError('Имя пользователя минимум 3 символа, пароль минимум 6');
+      return;
+    }
+
     try {
       const newUser = await register(username, password);
       onRegistrationSuccess(newUser);
     } catch (err) {
       if (err instanceof Error) {
-        setError(err.message);
+        setError(err.message);  // Показывает конкретную ошибку с backend
       } else {
         setError('Произошла неизвестная ошибка');
       }
@@ -30,33 +36,30 @@ const RegistrationScreen: React.FC<RegistrationScreenProps> = ({ onRegistrationS
   return (
     <div className="min-h-screen flex items-center justify-center font-sans p-4 theme-dark">
       <div className="w-full max-w-sm mx-auto">
-        <div className="p-8 rounded-2xl shadow-xl themed-bg-surface-modal border themed-border">
-          <h1 className="text-3xl font-bold text-center mb-2 text-transparent bg-clip-text bg-gradient-to-r from-brand-primary to-brand-accent">
-            Создать аккаунт
-          </h1>
-          <p className="text-center mb-8 themed-text-secondary text-sm">Присоединяйтесь к нам!</p>
-          
-          <form onSubmit={handleRegister} className="space-y-6">
+        <div className="p-8 rounded-2xl shadow-2xl border themed-bg-surface themed-border">
+          <h2 className="text-2xl font-bold mb-6 text-center themed-text-primary">Создать аккаунт</h2>
+          <p className="text-sm text-center themed-text-secondary mb-8">Присоединяйтесь к трекеру привычек</p>
+
+          <form onSubmit={handleRegister} className="space-y-4">
             <div>
-              {/* Fix: Replaced invalid property 'ה' with 'className'. */}
-              <label htmlFor="reg-username" className="block mb-2 text-sm font-medium themed-text-secondary">Имя пользователя</label>
               <input
                 type="text"
                 id="reg-username"
                 value={username}
                 onChange={e => setUsername(e.target.value)}
+                placeholder="Имя пользователя"
                 className="text-sm rounded-lg focus:ring-brand-primary focus:border-brand-primary block w-full p-2.5 themed-input-bg themed-text-primary"
                 required
               />
             </div>
+
             <div>
-              {/* Fix: Replaced invalid property 'ה' with 'className'. */}
-              <label htmlFor="reg-password" className="block mb-2 text-sm font-medium themed-text-secondary">Пароль (мин. 4 симв.)</label>
               <input
                 type="password"
                 id="reg-password"
                 value={password}
                 onChange={e => setPassword(e.target.value)}
+                placeholder="•••••••• (минимум 6 симв.)"
                 className="text-sm rounded-lg focus:ring-brand-primary focus:border-brand-primary block w-full p-2.5 themed-input-bg themed-text-primary"
                 required
               />

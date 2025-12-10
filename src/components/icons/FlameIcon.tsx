@@ -1,4 +1,5 @@
 
+
 import React from 'react';
 
 export const FlameIcon: React.FC<React.SVGProps<SVGSVGElement>> = (props) => (
